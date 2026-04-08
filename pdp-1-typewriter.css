@@ -1,0 +1,25 @@
+.main {
+    font-family: monospace;
+    font-size: 16px;
+    width: 81ch;
+    height: 24ch;
+    background-color: #e5dac3; /* Color taken from https://github.com/obsolescence/pidp1/blob/main/web_pdp1/srv/index.html */
+    overflow-y:scroll;
+    caret-color: transparent;
+}
+
+.cursor {
+    background-color: rgb(0% 0% 0% / 10%);
+}
+
+span.black {
+    color: black;
+}
+
+span.red {
+    color: red;
+}
+
+span.backspace {
+    margin-right: -1ch;
+}
