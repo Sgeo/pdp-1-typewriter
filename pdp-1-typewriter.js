@@ -69,12 +69,17 @@ class PDP1Typewriter extends HTMLElement {
             this.newSpan();
             this._maindiv.scrollTop = this._maindiv.scrollHeight; // Stolen from https://github.com/obsolescence/pidp1/blob/main/web_pdp1/srv/typewriter.js
         } else if(char === "\b") {
+            if(this._column === 1) {
+                return;
+            }
+            this._column -= 1;
             let backspace = document.createElement("span");
             backspace.className = "backspace";
             backspace.contentEditable = false;
             this._maindiv.append(backspace);
             this.newSpan();
         } else {
+            this._column += 1;
             this._current.append(char);
             this._maindiv.append(this._cursor);
         }
