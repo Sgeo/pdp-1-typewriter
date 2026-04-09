@@ -1,12 +1,18 @@
-const STYLE = `
-    .main {
-    
-    }
-`;
+const DELAY = 100; // 100ms seems to be the time mentioned in https://bitsavers.org/pdf/ibm/typewriter/model_b/540-0113-2_IBM_Input-Output_Writer_Model_B_Jan1966.pdf
+                   // for a keypress operation to complete
+                   // We want some delay so computer is more likely to process pasted input properly.
+
+function wait() {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, DELAY);
+    });
+}
 
 class PDP1Typewriter extends HTMLElement {
     constructor() {
         super();
+
+        this._task = Promise.resolve();
     }
     
     
@@ -37,16 +43,28 @@ class PDP1Typewriter extends HTMLElement {
 
             if(e.data) {
                 for(let char of e.data) {
-                    this.typed(char);
+                    this.taskWait(() => {this.typed(char)});
                 }
             }
 
             if(e.inputType === "deleteContentBackward") {
-                this.typed("\b");
+                this.taskWait(() => {this.typed("\b");});
             }
 
             if(e.inputType === "insertLineBreak" || e.inputType === "insertParagraph") {
-                this.typed("\n");
+                this.taskWait(() => {this.typed("\n");});
+            }
+
+            if(e.inputType === "insertFromPaste") {
+                for(let item of e.dataTransfer.items) {
+                    if(item.type === "text/plain") {
+                        item.getAsString(data => {
+                            for(let char of data) {
+                                this.taskWait(() => {this.typed(char);})
+                            }
+                        });
+                    }
+                }
             }
         });
 
@@ -54,6 +72,10 @@ class PDP1Typewriter extends HTMLElement {
             e.preventDefault(); // Attempt to block input not already blocked in beforeinput
         })
 
+    }
+
+    taskWait(fn) {
+        this._task = this._task.then(fn).then(wait);
     }
 
     // A character was typed by the user
