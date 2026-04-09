@@ -1,3 +1,6 @@
+import { Translator, BLACK, RED } from "./concise.js";
+
+
 const DELAY = 100; // 100ms seems to be the time mentioned in https://bitsavers.org/pdf/ibm/typewriter/model_b/540-0113-2_IBM_Input-Output_Writer_Model_B_Jan1966.pdf
                    // for a keypress operation to complete
                    // We want some delay so computer is more likely to process pasted input properly.
@@ -13,6 +16,7 @@ class PDP1Typewriter extends HTMLElement {
         super();
 
         this._task = Promise.resolve();
+        this._translator = new Translator;
     }
     
     
@@ -81,6 +85,19 @@ class PDP1Typewriter extends HTMLElement {
     // A character was typed by the user
     typed(char) {
         this.add(char);
+    }
+
+    fromComputer(concise) {
+        let result = this._translator.fromConcise(concise);
+        if(result === BLACK) {
+            this._spanclass = "black";
+        } else if(result === "RED") {
+            this._spanclass = "red";
+        } else {
+            for(let char of result) {
+                this.add(char);
+            }
+        }
     }
 
     // A character is being added to the page, either due to being typed or via computer
