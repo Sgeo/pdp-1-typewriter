@@ -11,6 +11,8 @@
     background-color: #e5dac3; /* Color taken from https://github.com/obsolescence/pidp1/blob/main/web_pdp1/srv/index.html */
     overflow-y:scroll;
     caret-color: transparent;
+    white-space-collapse: preserve;
+    text-wrap-mode: nowrap;
 }
 
 .cursor {
