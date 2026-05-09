@@ -94,7 +94,7 @@ class PDP1Typewriter extends HTMLElement {
     }
 
     fromComputer(concise) {
-        let result = this._translator.fromConcise(concise);
+        let result = this._translator.stringFromConcise(concise);
         if(result === BLACK) {
             this._spanclass = "black";
         } else if(result === "RED") {
