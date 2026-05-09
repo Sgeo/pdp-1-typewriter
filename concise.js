@@ -30,13 +30,42 @@ export class Translator {
         }
     }
 
+    // Given characters, returns an array of concise codes.
+    // The array may include shifts (0o72 and 0o74)
+    conciseFromString(string) {
+        let result = [];
+        for(let char of string) {
+            let concises = conciseFromStringTable(this._case).get(char);
+            for(let concise of concises) {
+                switch(concise) {
+                    case 0o72:
+                        this._case = LOWER;
+                        break;
+                    case 0o74:
+                        this._case = UPPER;
+                        break;
+                }
+            }
+            result.push(...concises);
+        }
+        return result;
+
+    }
+
 }
 
 function stringFromConciseTable(case_) {
     return {
         [LOWER]: conciseLower,
         [UPPER]: conciseUpper
-    }[case_]
+    }[case_];
+}
+
+function conciseFromStringTable(case_) {
+    return {
+        [LOWER]: stringTableLower,
+        [UPPER]: stringTableUpper
+    }[case_];
 }
 
 const conciseUpper = [];
@@ -147,3 +176,22 @@ conciseLower[0o74] = UPPER;
 conciseLower[0o75] = "\b";
 conciseLower[0o77] = "\n";
 
+const stringTableUpper = new Map;
+const stringTableLower = new Map;
+
+for(let concise = 0o00; concise <= 0o77; concise++) {
+    let stringUpper = conciseUpper[concise];
+    let stringLower = conciseLower[concise];
+    for(let [string, table] of [[stringUpper, stringTableUpper], [stringLower, stringTableLower]]) {
+        if(string && typeof string === "string" && string.length > 0) {
+            table.set(string[0], [concise]);
+        }
+    }
+    if(stringUpper != stringLower) {
+        for(let [string, table, shift] of [[stringUpper, stringTableLower, 0o74], [stringLower, stringTableUpper, 0o72]]) {
+            if(string && typeof string === "string" && string.length > 0) {
+                table.set(string[0], [shift, concise]);
+            }
+        }
+    }
+}

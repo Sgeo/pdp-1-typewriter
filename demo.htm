@@ -6,6 +6,12 @@
         <script type="module" src="pdp-1-typewriter.js"></script>
     </head>
     <body>
-        <pdp-1-typewriter></pdp-1-typewriter>
+        <pdp-1-typewriter id="typewriter"></pdp-1-typewriter>
+        <script>
+            let typewriter = document.querySelector("#typewriter");
+            typewriter.addEventListener("concise", function(e) {
+                console.log(e);
+            })
+        </script>
     </body>
 </html>
