@@ -32,10 +32,15 @@ export class Translator {
 
     // Given characters, returns an array of concise codes.
     // The array may include shifts (0o72 and 0o74)
+    // Returns undefined for unknown characters
     conciseFromString(string) {
         let result = [];
         for(let char of string) {
             let concises = conciseFromStringTable(this._case).get(char);
+            if(!concises) {
+                // Suppress unknown characters
+                return undefined;
+            }
             for(let concise of concises) {
                 switch(concise) {
                     case 0o72:

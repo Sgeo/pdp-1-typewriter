@@ -84,8 +84,12 @@ class PDP1Typewriter extends HTMLElement {
 
     // A character was typed by the user
     typed(char) {
-        this.add(char);
         let concises = this._translator.conciseFromString(char);
+        if(concises) { // Suppress unrecognized characters
+            this.add(char);
+        } else {
+            return;
+        }
         for(let concise of concises) {
             this.taskWait(() => {
                 this.dispatchEvent(new CustomEvent("concise", {detail: concise}))
