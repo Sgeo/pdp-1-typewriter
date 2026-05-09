@@ -95,10 +95,12 @@ class PDP1Typewriter extends HTMLElement {
 
     fromComputer(concise) {
         let result = this._translator.stringFromConcise(concise);
-        if(result === BLACK) {
+        if(result === BLACK && this._spanclass==="red") {
             this._spanclass = "black";
-        } else if(result === RED) {
+            this.newSpan();
+        } else if(result === RED && this._spanclass==="black") {
             this._spanclass = "red";
+            this.newSpan();
         } else {
             for(let char of result) {
                 this.add(char);
