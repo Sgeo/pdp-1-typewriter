@@ -33,7 +33,7 @@ class PDP1Typewriter extends HTMLElement {
 
         let link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = "pdp-1-typewriter.css";
+        link.href = new URL("pdp-1-typewriter.css", import.meta.url).toString();
         this._shadow.append(link);
 
         this._cursor = document.createElement("span");
